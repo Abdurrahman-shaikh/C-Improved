@@ -1,7 +1,10 @@
 # C-Improved
+
+![C-Improved](https://github.com/Abdurrahman-shaikh/C-Improved/assets/90972063/4416d88b-f5e3-48c7-9452-8357c102d9e4)
+
 # C-Improved Compiler
 
-C-Improved is a compiler project aimed at enhancing the C programming language with additional features and improvements.
+C-Improved is a project aimed at enhancing the C programming language with additional features and improvements.
 
 ## Contribution Guide
 
@@ -21,11 +24,7 @@ We welcome contributions from the community! If you'd like to contribute code to
 4. Push your changes to your fork: `git push origin feature-name`.
 5. Submit a pull request on GitHub with a detailed description of your changes.
 
-### Development Environment
-
-To set up the development environment and build the C-Improved compiler, follow the instructions in the `README.md` file in the repository.
 
 ## GitHub Repository
-
 [GitHub Repository](https://github.com/Abdurrahman-shaikh/C-Improved.git)
 
