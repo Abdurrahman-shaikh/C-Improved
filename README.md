@@ -12,7 +12,7 @@ We welcome contributions from the community! If you'd like to contribute code to
 4. Push your changes to your fork: `git push origin feature-name`.
 5. Submit a pull request on GitHub with a detailed description of your changes.
 
-## Setup Instructions
+## Setup Instructions(linux)
 
 To build and run the C-Improved compiler project, follow these steps:
 
