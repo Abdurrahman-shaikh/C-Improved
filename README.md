@@ -25,6 +25,10 @@ To build and run the C-Improved compiler project, follow these steps:
    ./build.sh
 
 
+##Resources 
+
+https://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html#Lexical-Elements
+
 ## GitHub Repository
 
 [GitHub Repository](https://github.com/Abdurrahman-shaikh/C-Improved.git)
