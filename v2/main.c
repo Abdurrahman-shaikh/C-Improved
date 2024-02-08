@@ -1,7 +1,7 @@
+#include "lexer.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "lexer.h"
 
 #define MAX_CONTENT_LENGTH 10000
 
