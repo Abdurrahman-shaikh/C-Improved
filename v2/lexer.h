@@ -18,6 +18,7 @@ typedef enum {
     TOKEN_STRING,
 } Token_Type;
 
+
 const char *token_type_name(Token_Type type);
 
 typedef struct {

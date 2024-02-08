@@ -42,33 +42,38 @@ const char *keywords[] = {
 
 #define keywords_count (sizeof(keywords)/sizeof(keywords[0]))
 
+
 const char *token_type_name(Token_Type type) {
     switch (type) {
-    case TOKEN_END:
-        return "end of content";
-    case TOKEN_INVALID:
-        return "invalid token";
-    case TOKEN_PREPROC:
-        return "preprocessor directive";
-    case TOKEN_SYMBOL:
-        return "symbol";
-    case TOKEN_OPEN_PAREN:
-        return "open paren";
-    case TOKEN_CLOSE_PAREN:
-        return "close paren";
-    case TOKEN_OPEN_CURLY:
-        return "open curly";
-    case TOKEN_CLOSE_CURLY:
-        return "close curly";
-    case TOKEN_SEMICOLON:
-        return "semicolon";
-    case TOKEN_KEYWORD:
-        return "keyword";
-    default:
-        printf("invalid token");
+        case TOKEN_END:
+            return "end of content";
+        case TOKEN_INVALID:
+            return "\033[1;31minvalid token\033[0m";
+        case TOKEN_PREPROC:
+            return "preprocessor directive";
+        case TOKEN_SYMBOL:
+            return "symbol";
+        case TOKEN_OPEN_PAREN:
+            return "open paren";
+        case TOKEN_CLOSE_PAREN:
+            return "close paren";
+        case TOKEN_OPEN_CURLY:
+            return "open curly";
+        case TOKEN_CLOSE_CURLY:
+            return "close curly";
+        case TOKEN_SEMICOLON:
+            return "semicolon";
+        case TOKEN_KEYWORD:
+            return "keyword";
+        case TOKEN_COMMENT:
+            return "comment";
+        case TOKEN_STRING:
+            return "string";
+        default:
+            return "unknown";
     }
-    return NULL;
 }
+
 
 Lexer lexer_new(const char *content, size_t content_len) {
     Lexer l = {0};
@@ -77,48 +82,55 @@ Lexer lexer_new(const char *content, size_t content_len) {
     return l;
 }
 
+
 bool lexer_starts_with(Lexer *l, const char *prefix) {
+    bool starts_with = true;
     size_t prefix_len = strlen(prefix);
-    if (prefix_len == 0) {
-        return true;
-    }
-    if (l->cursor + prefix_len - 1 >= l->content_len) {
-        return false;
-    }
-    for (size_t i = 0; i < prefix_len; ++i) {
-        if (prefix[i] != l->content[l->cursor + i]) {
-            return false;
+    
+    if (prefix_len > 0 && (l->cursor + prefix_len - 1 < l->content_len)) {
+        for (size_t i = 0; i < prefix_len; ++i) {
+            if (prefix[i] != l->content[l->cursor + i]) {
+                starts_with = false;
+                break;
+            }
         }
+    } else {
+        starts_with = false;
     }
-    return true;
+    
+    return starts_with;
 }
 
-void lexer_chop_char(Lexer *l, size_t len) {
-    for (size_t i = 0; i < len; ++i) {
-        assert(l->cursor < l->content_len);
-        char x = l->content[l->cursor];
-        l->cursor += 1;
-        if (x == '\n') {
-            l->line += 1;
-            l->bol = l->cursor;
-            l->x = 0;
-        }
-    }
-}
 
-void trim_left(Lexer *l) {
-    while (l->cursor < l->content_len && isspace(l->content[l->cursor])) {
-        lexer_chop_char(l, 1);
-    }
-}
 
-bool is_symbol_start(char x) {
-    return isalpha(x) || x == '_';
-}
+#define lexer_chop_char(l, len) \
+    do { \
+        for (size_t i = 0; i < len; ++i) { \
+            assert((l)->cursor < (l)->content_len); \
+            char x = (l)->content[(l)->cursor]; \
+            (l)->cursor += 1; \
+            if (x == '\n') { \
+                (l)->line += 1; \
+                (l)->bol = (l)->cursor; \
+                (l)->x = 0; \
+            } \
+        } \
+    } while(0)
 
-bool is_symbol(char x) {
-    return isalnum(x) || x == '_';
-}
+
+#define trim_left(l) \
+    do { \
+        while ((l)->cursor < (l)->content_len && isspace((l)->content[(l)->cursor])) { \
+            lexer_chop_char(l, 1); \
+        } \
+    } while(0)
+
+
+#define is_symbol_start(x) \
+    (isalpha(x) || (x) == '_')
+
+#define is_symbol(x) \
+    (isalnum(x) || (x) == '_')
 
 Token lexer_next(Lexer *l) {
     trim_left(l);
@@ -197,5 +209,6 @@ Token lexer_next(Lexer *l) {
     lexer_chop_char(l, 1);
     token.type = TOKEN_INVALID;
     token.text_len = 1;
+    printf("\033[1;31mInvalid token: \033[0m\033[1;41m%.*s\033[0m at position %zu\n", (int)token.text_len, token.text, l->cursor - token.text_len);
     return token;
 }

@@ -5,11 +5,13 @@
 #include <ctype.h>
 #include <string.h>
 
+// Define a structure to represent literal tokens
 typedef struct {
     Token_Type type;
     const char *text;
 } Literal_Token;
 
+// Initialize an array of literal tokens with their corresponding types
 Literal_Token literal_tokens[] = {
     {.text = "(", .type = TOKEN_OPEN_PAREN},
     {.text = ")", .type = TOKEN_CLOSE_PAREN},
@@ -17,8 +19,12 @@ Literal_Token literal_tokens[] = {
     {.text = "}", .type = TOKEN_CLOSE_CURLY},
     {.text = ";", .type = TOKEN_SEMICOLON},
 };
+
+// Define a macro to calculate the number of elements in the literal_tokens array
 #define literal_tokens_count (sizeof(literal_tokens)/sizeof(literal_tokens[0]))
 
+
+// Define an array of keywords
 const char *keywords[] = {
     "azmi", "abstract", "assert", "boolean", "break",
     "byte", "case", "catch", "char", "class", "const",
@@ -40,8 +46,11 @@ const char *keywords[] = {
 };
 
 
+// Define a macro to calculate the number of elements in the keywords array
 #define keywords_count (sizeof(keywords)/sizeof(keywords[0]))
 
+
+// Function to return a string representation of a Token_Type
 const char *token_type_name(Token_Type type) {
     switch (type) {
     case TOKEN_END:
@@ -70,6 +79,8 @@ const char *token_type_name(Token_Type type) {
     return NULL;
 }
 
+
+// Function to create a new Lexer instance
 Lexer lexer_new(const char *content, size_t content_len) {
     Lexer l = {0};
     l.content = content;
@@ -77,6 +88,7 @@ Lexer lexer_new(const char *content, size_t content_len) {
     return l;
 }
 
+// Function to check if a Lexer's content starts with a given prefix
 bool lexer_starts_with(Lexer *l, const char *prefix) {
     size_t prefix_len = strlen(prefix);
     if (prefix_len == 0) {
@@ -93,6 +105,8 @@ bool lexer_starts_with(Lexer *l, const char *prefix) {
     return true;
 }
 
+
+// Function to advance the cursor of a Lexer by a given number of characters
 void lexer_chop_char(Lexer *l, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         assert(l->cursor < l->content_len);
@@ -106,20 +120,25 @@ void lexer_chop_char(Lexer *l, size_t len) {
     }
 }
 
+// Function to trim whitespace characters from the beginning of a Lexer's content
 void trim_left(Lexer *l) {
     while (l->cursor < l->content_len && isspace(l->content[l->cursor])) {
         lexer_chop_char(l, 1);
     }
 }
 
+// Function to check if a character is a valid symbol start character
 bool is_symbol_start(char x) {
     return isalpha(x) || x == '_';
 }
 
+// Function to check if a character is a valid symbol character
 bool is_symbol(char x) {
     return isalnum(x) || x == '_';
 }
 
+
+// Function to get the next token from a Lexer
 Token lexer_next(Lexer *l) {
     trim_left(l);
 
@@ -197,6 +216,7 @@ Token lexer_next(Lexer *l) {
     lexer_chop_char(l, 1);
     token.type = TOKEN_INVALID;
     token.text_len = 1;
+    printf("\033[1;31mInvalid token: \033[0m\033[1;41m%.*s\033[0m at position %zu\n", (int)token.text_len, token.text, l->cursor - token.text_len);
     return token;
 }
 
