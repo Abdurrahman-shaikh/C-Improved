@@ -9,24 +9,14 @@ int main() {
     }
 
     // Print the sum
-    printf("Sum of even numbers from 1 to 100: %d\n", sum);
+    printf("Sum of even numbers from 1 to 100: %d", sum);
 
     for (int i = 0; i < 10; i++)
-        printf("Message %d\n", i + 1);
+        printf("Message %d", i + 1);
 
     int arr[] = {1, 2, 3, 4, 5};
-    printf("Array elements: ");
-    for (int i = 0; i < 5; i++) {
-        printf("%d ", arr[i]);
     }
-    printf("\n");
-
-    int a = 10;
-    int b = 5;
-    printf("Sum of %d and %d is %d\n", a, b, a + b);
-    printf("Difference of %d and %d is %d\n", a, b, a - b);
-    printf("Product of %d and %d is %d\n", a, b, a * b);
-    printf("Division of %d by %d is %d\n", a, b, a / b);
+    printf("");
 
     return 0;
 }
