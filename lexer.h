@@ -6,20 +6,33 @@
 /**
  * Enumeration representing different types of tokens.
  */
-typedef enum {
-    TOKEN_END = 0,          /**< End of content token. */
-    TOKEN_INVALID,          /**< Invalid token. */
-    TOKEN_PREPROC,          /**< Preprocessor directive token. */
-    TOKEN_SYMBOL,           /**< Symbol token. */
-    TOKEN_OPEN_PAREN,       /**< Open parenthesis token. */
-    TOKEN_CLOSE_PAREN,      /**< Close parenthesis token. */
-    TOKEN_OPEN_CURLY,       /**< Open curly brace token. */
-    TOKEN_CLOSE_CURLY,      /**< Close curly brace token. */
-    TOKEN_SEMICOLON,        /**< Semicolon token. */
-    TOKEN_KEYWORD,          /**< Keyword token. */
-    TOKEN_COMMENT,          /**< Comment token. */
-    TOKEN_STRING            /**< String token. */
+typedef enum {  
+  TOKEN_END = 0,          /**< End of content token. */
+  TOKEN_INVALID,          /**< Invalid token. */
+  TOKEN_PREPROC,          /**< Preprocessor directive token. */
+  TOKEN_SYMBOL,           /**< Symbol token. */
+  TOKEN_OPEN_PAREN,       /**< Open parenthesis token. */
+  TOKEN_CLOSE_PAREN,      /**< Close parenthesis token. */
+  TOKEN_OPEN_CURLY,       /**< Open curly brace token. */
+  TOKEN_CLOSE_CURLY,      /**< Close curly brace token. */
+  TOKEN_SEMICOLON,        /**< Semicolon token. */
+  TOKEN_KEYWORD,          /**< Keyword token. */
+  TOKEN_COMMENT,          /**< Comment token. */
+  TOKEN_STRING,            /**< String token. */
+  TOKEN_NUMBER,
+  TOKEN_OPERATOR,
+  TOKEN_SPECIAL_CHAR
 } Token_Type;
+
+typedef enum {
+  TOKENIZER_ERROR_INVALID_CHARACTER,
+  TOKENIZER_SUCCESS
+} TonkeError;
+
+typedef struct  {
+  const char *file_path;
+  size_t row;
+}Loc;
 
 /**
  * Returns the string representation of a token type.
