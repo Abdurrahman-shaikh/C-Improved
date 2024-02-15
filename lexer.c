@@ -23,26 +23,24 @@ Literal_Token literal_tokens[] = {
 // Define a macro to calculate the number of elements in the literal_tokens array
 #define literal_tokens_count (sizeof(literal_tokens)/sizeof(literal_tokens[0]))
 
-
-// Define an array of keywords
 const char *keywords[] = {
-    "azmi", "abstract", "assert", "boolean", "break",
-    "byte", "case", "catch", "char", "class", "const",
-    "continue", "default", "do", "double", "else",
-    "enum", "extends", "final", "finally", "float",
-    "for", "goto", "if", "implements", "import",
-    "instanceof", "int", "interface", "long", "native",
-    "new", "null", "package", "private", "protected",
-    "public", "return", "short", "static", "strictfp",
-    "super", "switch", "synchronized", "this", "throw",
-    "throws", "transient", "try", "void", "volatile",
-    "while", "auto", "break", "case", "char", "const",
-    "continue", "default", "do", "double", "else",
-    "enum", "extern", "float", "for", "goto","if",
-    "inline", "int", "long", "register", "restrict",
-    "return", "short", "signed", "sizeof", "static",
-    "struct", "switch", "typedef", "union", "unsigned",
-    "void", "volatile", "while"
+    "azmi", "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const",
+    "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float",
+    "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native",
+    "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp",
+    "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile",
+    "while", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else",
+    "enum", "extern", "float", "for", "goto","if", "inline", "int", "long", "register", "restrict",
+    "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", 
+    "unsigned","void", "volatile", "while", "alignas", "alignof", "and","and_eq", "asm", 
+    "bitor", "bool", "catch", "char16_t", "char32_t", "char8_t", "class", "co_await",
+    "co_return", "co_yield", "compl", "concept", "const_cast", "consteval", "constexpr",
+    "constinit", "decltype", "delete", "dynamic_cast", "explicit", "export", "false",
+    "friend", "inline", "mutable", "namespace", "new", "noexcept", "not", "not_eq",
+    "nullptr", "operator", "or", "or_eq", "private", "protected", "public", "reflexpr",
+    "reinterpret_cast", "requires", "static_assert", "static_cast", "synchronized", "template",
+    "this", "thread_local", "throw", "true", "try", "typeid", "typename","atomic_noexcept", "bitand",
+    "using", "virtual", "wchar_t", "xor", "xor_eq","atomic_cancel", "atomic_commit", 
 };
 
 
@@ -73,8 +71,12 @@ const char *token_type_name(Token_Type type) {
         return "semicolon";
     case TOKEN_KEYWORD:
         return "keyword";
+    case TOKEN_NUMBER:
+        return "number";
+    case TOKEN_OPERATOR:
+      return "operator";
     default:
-        printf("invalid token");
+        printf("invalid token %c",type);
     }
     return NULL;
 }
@@ -137,6 +139,41 @@ bool is_symbol(char x) {
     return isalnum(x) || x == '_';
 }
 
+// Function to check if a character is an operator
+bool is_operator(char x) {
+    return x == '+' || x == '-' || x == '*' || x == '/' || x == '=' || x == '[' || x == ']' || x == ','
+  || x == '<' || x == '>' || x == '%' ;
+}
+
+// Function to check if a character is a digit
+bool is_digit(char x) {
+    return isdigit(x);
+}
+
+// Function to tokenize operators
+Token tokenize_operator(Lexer *l) {
+    Token token = {
+        .type = TOKEN_OPERATOR,
+        .text = &l->content[l->cursor],
+        .text_len = 1
+    };
+    lexer_chop_char(l, 1);
+    return token;
+}
+
+// Function to tokenize numbers
+Token tokenize_number(Lexer *l) {
+    Token token = {
+        .type = TOKEN_NUMBER,
+        .text = &l->content[l->cursor],
+        .text_len = 0
+    };
+    while (l->cursor < l->content_len && is_digit(l->content[l->cursor])) {
+        lexer_chop_char(l, 1);
+        token.text_len += 1;
+    }
+    return token;
+}
 
 // Function to get the next token from a Lexer
 Token lexer_next(Lexer *l) {
@@ -147,6 +184,24 @@ Token lexer_next(Lexer *l) {
     };
 
     if (l->cursor >= l->content_len) return token;
+
+
+   /* if (l->content[l->cursor] == '(' || l->content[l->cursor] == ')'
+        || l->content[l->cursor] == '{' || l->content[l->cursor] == '}'
+        || l->content[l->cursor] == ';') {
+        token.type = TOKEN_SPECIAL_CHAR;
+        token.text_len = 1;
+        lexer_chop_char(l, 1);
+        return token;
+    } */
+
+    if (is_operator(l->content[l->cursor])) {
+        return tokenize_operator(l);
+    }
+
+    if (is_digit(l->content[l->cursor])) {
+        return tokenize_number(l);
+    }
 
     if (l->content[l->cursor] == '"') {
         token.type = TOKEN_STRING;
@@ -184,7 +239,7 @@ Token lexer_next(Lexer *l) {
         token.text_len = &l->content[l->cursor] - token.text;
         return token;
     }
-    
+
     for (size_t i = 0; i < literal_tokens_count; ++i) {
         if (lexer_starts_with(l, literal_tokens[i].text)) {
             size_t text_len = strlen(literal_tokens[i].text);
@@ -216,7 +271,7 @@ Token lexer_next(Lexer *l) {
     lexer_chop_char(l, 1);
     token.type = TOKEN_INVALID;
     token.text_len = 1;
-    printf("\033[1;31mInvalid token: \033[0m\033[1;41m%.*s\033[0m at position %zu\n", (int)token.text_len, token.text, l->cursor - token.text_len);
+    printf("\033[1;31mInvalid token: \033[0m\033[1;41m%.*s\033[0m at line number %zu\n", (int)token.text_len, token.text, l->line);
     return token;
 }
 
