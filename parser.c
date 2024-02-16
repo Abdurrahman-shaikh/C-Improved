@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "lexer.h" // Assuming you have defined Token_Type and Lexer structures in lexer.h
+#include "lexer.h"
 
 // Function prototypes
 int parse_expression(Lexer *lexer);
