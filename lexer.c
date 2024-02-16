@@ -1,9 +1,10 @@
 #include <assert.h>
 #include <stdio.h>
-#include "lexer.h"
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
+#include "lexer.h"
+#include "parser.h"
 
 // Define a structure to represent literal tokens
 typedef struct {

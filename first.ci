@@ -1,23 +1,2 @@
-#include <stdio.h>
-
-int main() {
-    int sum = 0;
-
-    // Calculate the sum of even numbers from 1 to 100
-    for (int i = 1; i <= 100; i++) {
-        if (i % 2 == 0) sum += i;
-    }
-
-    // Print the sum
-    printf("Sum of even numbers from 1 to 100: %d", sum);
-
-    for (int i = 0; i < 10; i++)
-        printf("Message %d", i + 1);
-
-    int arr[] = {1, 2, 3, 4, 5};
-    }
-    printf("");
-
-    return 0;
-}
+3 + 4 * (2 + 5)
 
