@@ -1,6 +1,0 @@
-<Expression> ::= <Term> | <Expression> '+' <Term>
-<Term> ::= <Factor> | <Term> '*' <Factor>
-<Factor> ::= '(' <Expression> ')' | <Number> | <Symbol>
-<Number> ::= TOKEN_NUMBER
-<Symbol> ::= TOKEN_SYMBOL
-
