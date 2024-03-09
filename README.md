@@ -21,8 +21,8 @@ To build and run the C-Improved compiler project, follow these steps:
    git clone https://github.com/Abdurrahman-shaikh/C-Improved.git
 
    cd C-Improved
-   chmod +x build.sh
-   ./build.sh
+   make clean
+   make
 
 
 ##Resources 
