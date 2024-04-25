@@ -1,0 +1,6 @@
+main = ():int => {
+  x = 256;
+  value = itos(x, " ");
+  print(value);
+  return 0;
+};

@@ -1,0 +1,6 @@
+main = ():int => {
+  res = (5 + 5 * 5) - 1;
+  value = itos(res, " ");
+  print(value);
+  return 0;
+}
